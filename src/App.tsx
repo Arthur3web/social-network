@@ -1,83 +1,55 @@
 import React from "react";
 import "./App.css";
 import { StoreProvider } from "./stores/StoreContext";
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import { BrowserRouter as Router, Route, Routes, useNavigate } from "react-router-dom";
 import ProfileAccount from "./pages/ProfileAccount";
+import { Layout } from "antd";
 import PostList from "./pages/PostList";
-import {
-  UploadOutlined,
-  UserOutlined,
-  VideoCameraOutlined,
-} from "@ant-design/icons";
-import { Layout, Menu, theme } from "antd";
 
-const { Header, Content, Footer, Sider } = Layout;
+const { Sider, Content } = Layout;
 
-const items = [
-  UserOutlined,
-  VideoCameraOutlined,
-  UploadOutlined,
-  UserOutlined,
-].map((icon, index) => ({
-  key: String(index + 1),
-  icon: React.createElement(icon),
-  label: `nav ${index + 1}`,
-}));
+const NavigationButtons = () => {
+  const navigate = useNavigate();
+  
+  return (
+    <div className="control-buttons">
+      <button 
+        className="retro-btn active" 
+        onClick={() => navigate('/')}
+      >
+        PROFILE
+      </button>
+      <button 
+        className="retro-btn"
+        onClick={() => navigate('/posts')}
+      >
+        POSTS
+      </button>
+      <button className="retro-btn power-btn">
+        LOGOUT
+      </button>
+    </div>
+  );
+};
 
 function App() {
-  const {
-    token: { colorBgContainer, borderRadiusLG },
-  } = theme.useToken();
-
   return (
-    // <StoreProvider>
-    //   <div className="App">
-    //     <Router>
-    //       <Routes>
-    //         {/* <Route path="/" element={<PostList />} /> */}
-    //         <Route path="/" element={<ProfileAccount />} />
-    //       </Routes>
-    //     </Router>
-    //   </div>
-    // </StoreProvider>
-    <Layout>
-      <Layout>
-        <Header style={{ padding: 0, background: colorBgContainer }} />
-        <Content style={{ margin: "24px 16px 0" }}>
-          <div
-            style={{
-              padding: 24,
-              minHeight: 360,
-              background: colorBgContainer,
-              borderRadius: borderRadiusLG,
-            }}
-          >
-            content
-          </div>
-        </Content>
-        <Footer style={{ textAlign: "center" }}>
-          Ant Design ©{new Date().getFullYear()} Created by Ant UED
-        </Footer>
-      </Layout>
-      <Sider
-        breakpoint="lg"
-        collapsedWidth="0"
-        onBreakpoint={(broken) => {
-          console.log(broken);
-        }}
-        onCollapse={(collapsed, type) => {
-          console.log(collapsed, type);
-        }}
-      >
-        <div className="demo-logo-vertical" />
-        <Menu
-          theme="dark"
-          mode="inline"
-          defaultSelectedKeys={["4"]}
-          items={items}
-        />
-      </Sider>
-    </Layout>
+    <StoreProvider>
+      <Router>
+        <Layout className="social-network-layout">
+          <Content className="social-network-content">
+            <Routes>
+              <Route path="/posts" element={<PostList />} />
+              <Route path="/" element={<ProfileAccount />} />
+            </Routes>
+          </Content>
+
+          <Sider className="control-panel">
+            <NavigationButtons />
+          </Sider>
+        </Layout>
+      </Router>
+    </StoreProvider>
   );
 }
 
