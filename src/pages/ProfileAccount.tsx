@@ -4,7 +4,6 @@ import { rootStore } from "../stores/RootStore";
 const ProfileAccount = () => {
   return (
     <>
-      {/* <div>HELLO</div> */}
       {rootStore.currentUser && (
         <>
           <div>{rootStore.currentUser.username}</div>

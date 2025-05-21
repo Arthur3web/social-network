@@ -9,6 +9,7 @@ rootStore.setCurrentUser({
   id: "1",
   username: "Артур",
   avatar: "./medved-flag-rossii.jpg",
+  age: 30,
 });
 
 const root = ReactDOM.createRoot(

@@ -1,5 +1,5 @@
 import { makeAutoObservable } from "mobx";
-import { Post, User } from "../types/User";
+import { Post, User, Comment } from "../types/User";
 
 class RootStore {
   currentUser: User | null = null;
@@ -30,12 +30,34 @@ class RootStore {
     this.posts.unshift(newPost);
   }
 
-  // likePost(postId: string) {
-  //   const post = this.posts.find((p) => p.id === postId);
-  //   if (post) {
-  //     post.likes += 1;
-  //   }
-  // }
+  addCommentPost(postId: string, commentText: string) {
+    if (!this.currentUser) return;
+
+    const post = this.posts.find((p) => p.id === postId);
+    if (!post) {
+      console.error(`Post  ${postId} not found`);
+      return;
+    }
+
+    const newComment: Comment = {
+      id: Date.now().toString(),
+      author: this.currentUser,
+      content: commentText,
+      createdAt: new Date(),
+    };
+
+    if (!post.comments) {
+      post.comments = [];
+    }
+    post.comments.push(newComment);
+  }
+
+  likePost(postId: string) {
+    const post = this.posts.find((p) => p.id === postId);
+    if (post) {
+      post.likes += 1;
+    }
+  }
 }
 
 export const rootStore = new RootStore();

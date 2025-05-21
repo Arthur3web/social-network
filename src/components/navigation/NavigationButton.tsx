@@ -1,22 +1,19 @@
-// src/components/navigation/NavigationButton.tsx
-import React from 'react';
-import { Button } from 'antd';
-import { Link } from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 
-interface NavigationButtonProps {
-  icon: string;
-  label: string;
-  path: string;
-}
+const NavigationButtons = () => {
+  const navigate = useNavigate();
 
-const NavigationButton: React.FC<NavigationButtonProps> = ({ icon, label, path }) => {
   return (
-    <Link to={path}>
-      <Button className="navigation-button" icon={icon}>
-        {label}
-      </Button>
-    </Link>
+    <div className="control-buttons">
+      <button className="retro-btn active" onClick={() => navigate("/")}>
+        PROFILE
+      </button>
+      <button className="retro-btn" onClick={() => navigate("/posts")}>
+        POSTS
+      </button>
+      <button className="retro-btn power-btn">LOGOUT</button>
+    </div>
   );
 };
 
-export default NavigationButton;
+export default NavigationButtons;
