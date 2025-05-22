@@ -11,7 +11,12 @@ const NavigationButtons = () => {
       <button className="retro-btn" onClick={() => navigate("/posts")}>
         POSTS
       </button>
-      <button className="retro-btn power-btn">LOGOUT</button>
+      <button
+        className="retro-btn power-btn"
+        onClick={() => navigate("/login")}
+      >
+        LOGOUT
+      </button>
     </div>
   );
 };

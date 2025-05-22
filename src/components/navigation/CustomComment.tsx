@@ -47,7 +47,7 @@ const CustomComment: React.FC<CommentProps> = ({
   const submitReply = () => {
     if (!replyText.trim()) return;
 
-    rootStore.addCommentPost(id, replyText);
+    rootStore.addCommentToPost(id, replyText);
     setReplyText("");
     setIsReplying(false);
   };

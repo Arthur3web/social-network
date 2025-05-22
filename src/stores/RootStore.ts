@@ -6,6 +6,12 @@ class RootStore {
   users: User[] = [];
   posts: Post[] = [];
   isLoading = false;
+  // authStore: AuthStore;
+
+  // constructor(authStore: AuthStore) {
+  //   this.authStore = authStore;
+  //   makeAutoObservable(this);
+  // }
 
   constructor() {
     makeAutoObservable(this);
@@ -30,7 +36,7 @@ class RootStore {
     this.posts = [newPost, ...this.posts]; // Иммутабельное добавление в начала массива
   }
 
-  addCommentPost(postId: string, commentText: string) {
+  addCommentToPost(postId: string, commentText: string) {
     if (!this.currentUser) return;
 
     // Иммутабельное добавление комментария

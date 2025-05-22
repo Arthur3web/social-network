@@ -24,7 +24,7 @@ const PostList = observer(() => {
 
   const handleAddComment = (postId: string) => {
     if (commentText.trim()) {
-      rootStore.addCommentPost(postId, commentText);
+      rootStore.addCommentToPost(postId, commentText);
       setCommentText("");
       setActiveCommentPostId(null);
     }
