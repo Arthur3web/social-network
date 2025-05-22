@@ -27,36 +27,36 @@ class RootStore {
       createdAt: new Date(),
     };
 
-    this.posts.unshift(newPost);
+    this.posts = [newPost, ...this.posts]; // Иммутабельное добавление в начала массива
   }
 
   addCommentPost(postId: string, commentText: string) {
     if (!this.currentUser) return;
 
-    const post = this.posts.find((p) => p.id === postId);
-    if (!post) {
-      console.error(`Post  ${postId} not found`);
-      return;
-    }
+    // Иммутабельное добавление комментария
+    this.posts = this.posts.map((post) => {
+      if (post.id !== postId) return post;
 
-    const newComment: Comment = {
-      id: Date.now().toString(),
-      author: this.currentUser,
-      content: commentText,
-      createdAt: new Date(),
-    };
+      const newComment: Comment = {
+        id: Date.now().toString(),
+        author: this.currentUser!,
+        content: commentText,
+        createdAt: new Date(),
+      };
 
-    if (!post.comments) {
-      post.comments = [];
-    }
-    post.comments.push(newComment);
+      return {
+        ...post,
+        comments: [...(post.comments || []), newComment],
+      };
+    });
   }
 
   likePost(postId: string) {
-    const post = this.posts.find((p) => p.id === postId);
-    if (post) {
-      post.likes += 1;
-    }
+    // Иммутабельное обновление лайков
+    this.posts = this.posts.map((post) => {
+      if (post.id !== postId) return post;
+      return { ...post, likes: post.likes + 1 };
+    });
   }
 }
 
