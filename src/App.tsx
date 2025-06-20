@@ -7,6 +7,7 @@ import { Layout } from "antd";
 import PostList from "./pages/PostList";
 import NavigationPanel from "./components/navigation/NavigationPanel";
 import Login from "./pages/Login";
+import LoginCRT from "./pages/LoginCRT";
 
 const { Content } = Layout;
 
@@ -20,6 +21,7 @@ function App() {
               <Route path="/posts" element={<PostList />} />
               <Route path="/" element={<ProfileAccount />} />
               <Route path="/login" element={<Login />} />
+              <Route path="/loginCRT" element={<LoginCRT />} />
             </Routes>
           </Content>
 
