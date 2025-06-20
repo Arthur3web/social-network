@@ -1,99 +1,202 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-// Эффект белого шума (CRT noise) на весь контент
-const CRTWhiteNoiseFull: React.FC<{ onFinish: () => void }> = ({ onFinish }) => {
-  const [frames, setFrames] = useState<string[]>([]);
+// Эффект взрыва звезды (анимированная вспышка)
+const StarExplosion: React.FC<{ onFinish: () => void }> = ({ onFinish }) => {
   useEffect(() => {
-    // Генерируем 10 кадров "шума"
-    const genNoise = () => {
-      const arr: string[] = [];
-      for (let i = 0; i < 10; i++) {
-        let dots = "";
-        for (let j = 0; j < 6000; j++) {
-          const x = Math.random() * 1920;
-          const y = Math.random() * 1080;
-          const gray = Math.floor(Math.random() * 200 + 55);
-          dots += `<rect x="${x}" y="${y}" width="2" height="2" fill="rgb(${gray},${gray},${gray})" />`;
-        }
-        arr.push(
-          `data:image/svg+xml;utf8,<svg width="1920" height="1080" xmlns="http://www.w3.org/2000/svg" style="background:#fff">${dots}</svg>`
-        );
-      }
-      return arr;
-    };
-    setFrames(genNoise());
-    const timeout = setTimeout(onFinish, 1200);
+    const timeout = setTimeout(onFinish, 1100);
     return () => clearTimeout(timeout);
   }, [onFinish]);
-
-  const [frame, setFrame] = useState(0);
-  useEffect(() => {
-    if (frames.length === 0) return;
-    const interval = setInterval(() => {
-      setFrame((f) => (f + 1) % frames.length);
-    }, 60);
-    return () => clearInterval(interval);
-  }, [frames]);
 
   return (
     <div
       style={{
         position: "absolute",
         inset: 0,
-        width: "100%",
-        height: "100%",
-        zIndex: 10,
-        background: "#fff",
-        overflow: "hidden",
+        zIndex: 20,
+        background: "#000",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
         pointerEvents: "none",
       }}
     >
-      {frames.length > 0 && (
-        <img
-          src={frames[frame]}
-          alt="noise"
-          style={{
-            width: "100vw",
-            height: "100vh",
-            objectFit: "cover",
-            display: "block",
-            pointerEvents: "none",
-            userSelect: "none",
-          }}
-        />
-      )}
-      {/* CRT scanlines */}
+      <svg
+        width="100vw"
+        height="100vh"
+        viewBox="0 0 1920 1080"
+        style={{
+          width: "100vw",
+          height: "100vh",
+          display: "block",
+        }}
+      >
+        <radialGradient id="star-explosion" cx="50%" cy="50%" r="50%">
+          <stop offset="0%" stopColor="#fff" stopOpacity="1" />
+          <stop offset="40%" stopColor="#fff" stopOpacity="0.8" />
+          <stop offset="60%" stopColor="#ffe600" stopOpacity="0.5" />
+          <stop offset="100%" stopColor="#000" stopOpacity="0" />
+        </radialGradient>
+        <circle
+          cx="960"
+          cy="540"
+          r="0"
+          fill="url(#star-explosion)"
+        >
+          <animate
+            attributeName="r"
+            from="0"
+            to="1200"
+            dur="0.7s"
+            fill="freeze"
+            keySplines="0.2 0.8 0.2 1"
+            calcMode="spline"
+          />
+          <animate
+            attributeName="opacity"
+            from="1"
+            to="0"
+            begin="0.7s"
+            dur="0.4s"
+            fill="freeze"
+          />
+        </circle>
+      </svg>
+      {/* Вспышка белого цвета поверх */}
       <div
         style={{
           position: "absolute",
           inset: 0,
-          pointerEvents: "none",
-          background:
-            "repeating-linear-gradient(0deg,rgba(0,0,0,0.08) 0px,rgba(0,0,0,0.08) 1px,transparent 1.5px,transparent 4px)",
-          zIndex: 11,
+          background: "#fff",
+          opacity: 0,
+          animation: "star-flash 0.4s 0.7s forwards",
+          zIndex: 21,
         }}
       />
+      <style>
+        {`
+          @keyframes star-flash {
+            0% { opacity: 0; }
+            10% { opacity: 1; }
+            100% { opacity: 0; }
+          }
+        `}
+      </style>
     </div>
   );
 };
 
+// Абстрактный аналоговый шум (canvas)
+const AnalogNoise: React.FC<{ duration?: number; onFinish?: () => void }> = ({
+  duration = 1200,
+  onFinish,
+}) => {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+
+  useEffect(() => {
+    let running = true;
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext("2d");
+    const w = window.innerWidth;
+    const h = window.innerHeight;
+    canvas.width = w;
+    canvas.height = h;
+
+    function drawNoise() {
+      if (!running || !ctx) return;
+      const imgData = ctx.createImageData(w, h);
+      for (let i = 0; i < imgData.data.length; i += 4) {
+        // Случайный серый + редкие цветные пиксели
+        const gray = Math.floor(Math.random() * 180 + 40);
+        let r = gray, g = gray, b = gray;
+        if (Math.random() < 0.01) {
+          // Цветные помехи
+          r = Math.floor(Math.random() * 256);
+          g = Math.floor(Math.random() * 256);
+          b = Math.floor(Math.random() * 256);
+        }
+        imgData.data[i] = r;
+        imgData.data[i + 1] = g;
+        imgData.data[i + 2] = b;
+        imgData.data[i + 3] = 255;
+      }
+      ctx.putImageData(imgData, 0, 0);
+
+      // "Плавающие" горизонтальные полосы-помехи
+      for (let i = 0; i < 6; i++) {
+        const y = Math.random() * h;
+        ctx.globalAlpha = Math.random() * 0.18 + 0.08;
+        ctx.fillStyle = "#fff";
+        ctx.fillRect(0, y, w, Math.random() * 8 + 2);
+        ctx.globalAlpha = 1;
+      }
+
+      // Эффект сканирующих линий
+      ctx.globalAlpha = 0.08;
+      for (let y = 0; y < h; y += 3) {
+        ctx.fillStyle = "#000";
+        ctx.fillRect(0, y, w, 1);
+      }
+      ctx.globalAlpha = 1;
+    }
+
+    let frame = 0;
+    function loop() {
+      if (!running) return;
+      drawNoise();
+      frame++;
+      requestAnimationFrame(loop);
+    }
+    loop();
+
+    const timer = setTimeout(() => {
+      running = false;
+      onFinish && onFinish();
+    }, duration);
+
+    return () => {
+      running = false;
+      clearTimeout(timer);
+    };
+  }, [duration, onFinish]);
+
+  return (
+    <canvas
+      ref={canvasRef}
+      style={{
+        position: "absolute",
+        inset: 0,
+        width: "100vw",
+        height: "100vh",
+        zIndex: 10,
+        background: "#fff",
+        display: "block",
+        pointerEvents: "none",
+        imageRendering: "pixelated",
+      }}
+    />
+  );
+};
+
 const LoginCRT = () => {
-  const [showNoise, setShowNoise] = useState(true);
+  const [phase, setPhase] = useState<"star" | "noise" | "done">("star");
   const navigate = useNavigate();
 
-  // ENTER для входа
+  // Смена фаз: взрыв -> шум -> переход
   useEffect(() => {
-    if (!showNoise) {
-      const handleKey = (e: KeyboardEvent) => {
-        if (e.key === "Enter") {
-          navigate("/");
-        }
-      };
-      window.addEventListener("keydown", handleKey);
-      return () => window.removeEventListener("keydown", handleKey);
+    if (phase === "star") {
+      const timeout = setTimeout(() => setPhase("noise"), 1100);
+      return () => clearTimeout(timeout);
     }
-  }, [showNoise, navigate]);
+    if (phase === "noise") {
+      const timeout = setTimeout(() => setPhase("done"), 1200);
+      return () => clearTimeout(timeout);
+    }
+    if (phase === "done") {
+      navigate("/login");
+    }
+  }, [phase, navigate]);
 
   return (
     <div
@@ -111,26 +214,8 @@ const LoginCRT = () => {
         borderRadius: 0,
       }}
     >
-      {showNoise && <CRTWhiteNoiseFull onFinish={() => setShowNoise(false)} />}
-      {!showNoise && (
-        <div
-          style={{
-            width: "100%",
-            height: "100%",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            color: "#00ffe7",
-            fontFamily: "'VT323', 'Fira Mono', monospace",
-            fontSize: 32,
-            letterSpacing: 2,
-            textShadow: "0 0 8px #00ffe7, 0 0 2px #fff",
-            userSelect: "none",
-          }}
-        >
-          PRESS ENTER TO LOGIN
-        </div>
-      )}
+      {phase === "star" && <StarExplosion onFinish={() => setPhase("noise")} />}
+      {phase === "noise" && <AnalogNoise />}
     </div>
   );
 };
