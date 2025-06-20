@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 // Эффект взрыва звезды (анимированная вспышка)
 const StarExplosion: React.FC<{ onFinish: () => void }> = ({ onFinish }) => {
@@ -340,6 +341,7 @@ const StyledLogin = () => {
 
 const LoginCRT = () => {
   const [phase, setPhase] = useState<"star" | "noise" | "login">("star");
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (phase === "star") {
@@ -350,7 +352,11 @@ const LoginCRT = () => {
       const timeout = setTimeout(() => setPhase("login"), 1200);
       return () => clearTimeout(timeout);
     }
-  }, [phase]);
+    if (phase === "login") {
+      // После завершения анимации и шума сразу редиректим на /login
+      navigate("/login", { replace: true });
+    }
+  }, [phase, navigate]);
 
   // Контейнер для ограничения по размеру родителя (social-network-content)
   return (
@@ -372,7 +378,7 @@ const LoginCRT = () => {
     >
       {phase === "star" && <StarExplosion onFinish={() => setPhase("noise")} />}
       {phase === "noise" && <AnalogNoise onFinish={() => setPhase("login")} />}
-      {phase === "login" && <StyledLogin />}
+      {/* phase === "login" не рендерит форму, а сразу редиректит */}
     </div>
   );
 };
