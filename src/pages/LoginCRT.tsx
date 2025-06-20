@@ -1,5 +1,4 @@
 import React, { useEffect, useRef, useState } from "react";
-import { useNavigate } from "react-router-dom";
 
 // Эффект взрыва звезды (анимированная вспышка)
 const StarExplosion: React.FC<{ onFinish: () => void }> = ({ onFinish }) => {
@@ -19,15 +18,16 @@ const StarExplosion: React.FC<{ onFinish: () => void }> = ({ onFinish }) => {
         alignItems: "center",
         justifyContent: "center",
         pointerEvents: "none",
+        borderRadius: "inherit",
       }}
     >
       <svg
-        width="100vw"
-        height="100vh"
+        width="100%"
+        height="100%"
         viewBox="0 0 1920 1080"
         style={{
-          width: "100vw",
-          height: "100vh",
+          width: "100%",
+          height: "100%",
           display: "block",
         }}
       >
@@ -71,6 +71,7 @@ const StarExplosion: React.FC<{ onFinish: () => void }> = ({ onFinish }) => {
           opacity: 0,
           animation: "star-flash 0.4s 0.7s forwards",
           zIndex: 21,
+          borderRadius: "inherit",
         }}
       />
       <style>
@@ -98,8 +99,8 @@ const AnalogNoise: React.FC<{ duration?: number; onFinish?: () => void }> = ({
     const canvas = canvasRef.current;
     if (!canvas) return;
     const ctx = canvas.getContext("2d");
-    const w = window.innerWidth;
-    const h = window.innerHeight;
+    const w = canvas.offsetWidth;
+    const h = canvas.offsetHeight;
     canvas.width = w;
     canvas.height = h;
 
@@ -107,11 +108,9 @@ const AnalogNoise: React.FC<{ duration?: number; onFinish?: () => void }> = ({
       if (!running || !ctx) return;
       const imgData = ctx.createImageData(w, h);
       for (let i = 0; i < imgData.data.length; i += 4) {
-        // Случайный серый + редкие цветные пиксели
         const gray = Math.floor(Math.random() * 180 + 40);
         let r = gray, g = gray, b = gray;
         if (Math.random() < 0.01) {
-          // Цветные помехи
           r = Math.floor(Math.random() * 256);
           g = Math.floor(Math.random() * 256);
           b = Math.floor(Math.random() * 256);
@@ -141,11 +140,9 @@ const AnalogNoise: React.FC<{ duration?: number; onFinish?: () => void }> = ({
       ctx.globalAlpha = 1;
     }
 
-    let frame = 0;
     function loop() {
       if (!running) return;
       drawNoise();
-      frame++;
       requestAnimationFrame(loop);
     }
     loop();
@@ -167,55 +164,215 @@ const AnalogNoise: React.FC<{ duration?: number; onFinish?: () => void }> = ({
       style={{
         position: "absolute",
         inset: 0,
-        width: "100vw",
-        height: "100vh",
+        width: "100%",
+        height: "100%",
         zIndex: 10,
         background: "#fff",
         display: "block",
         pointerEvents: "none",
         imageRendering: "pixelated",
+        borderRadius: "inherit",
       }}
     />
   );
 };
 
-const LoginCRT = () => {
-  const [phase, setPhase] = useState<"star" | "noise" | "done">("star");
-  const navigate = useNavigate();
+// Страница входа в стиле God of War Ragnarok, не выходящая за рамки контента
+const StyledLogin = () => {
+  const [error, setError] = useState("");
+  // Можно добавить обработку YES/NO
+  const handleYes = () => {
+    setError("");
+    // navigate("/"); // переход на главную
+  };
+  const handleNo = () => {
+    setError("Login cancelled");
+  };
 
-  // Смена фаз: взрыв -> шум -> переход
+  return (
+    <div
+      style={{
+        width: "100%",
+        maxWidth: 540,
+        margin: "0 auto",
+        background: "transparent",
+        position: "relative",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        justifyContent: "center",
+        fontFamily: "Montserrat, 'Segoe UI', 'Fira Mono', monospace",
+        color: "#fff",
+        textAlign: "center",
+        boxSizing: "border-box",
+        padding: "0 16px",
+      }}
+    >
+      {/* Жёлтая полоса с заголовком */}
+      <div
+        style={{
+          width: "100%",
+          maxWidth: 540,
+          background: "linear-gradient(90deg, #ffce3e 80%, #ffe98a 100%)",
+          color: "#181818",
+          fontWeight: 900,
+          fontSize: 28,
+          letterSpacing: 2,
+          padding: "16px 0 10px 0",
+          borderRadius: "8px 8px 0 0",
+          boxShadow: "0 2px 16px #000a",
+          textShadow: "0 2px 8px #ffe98a88",
+          borderBottom: "2px solid #fff2",
+          fontFamily: "Montserrat, 'Segoe UI', 'Fira Mono', monospace",
+          textTransform: "uppercase",
+          margin: "0 auto",
+        }}
+      >
+        CONNECT TO SOCIAL QUEST
+      </div>
+      {/* Описание */}
+      <div
+        style={{
+          background: "#181818",
+          width: "100%",
+          maxWidth: 540,
+          margin: "0 auto",
+          padding: "28px 0 20px 0",
+          fontSize: 18,
+          borderRadius: "0 0 8px 8px",
+          borderBottom: "2px solid #fff2",
+          borderLeft: "2px solid #fff2",
+          borderRight: "2px solid #fff2",
+          boxShadow: "0 8px 32px #000a",
+        }}
+      >
+        Would you like to log in to your Social Quest account?
+        <div style={{ marginTop: 24, display: "flex", justifyContent: "center", gap: 40 }}>
+          <button
+            type="button"
+            onClick={handleYes}
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: 10,
+              background: "linear-gradient(90deg, #ffce3e 80%, #ffe98a 100%)",
+              color: "#181818",
+              border: "none",
+              borderRadius: 6,
+              fontWeight: 900,
+              fontSize: 20,
+              padding: "10px 36px",
+              cursor: "pointer",
+              boxShadow: "0 0 12px #ffe98a88",
+              letterSpacing: 2,
+              textTransform: "uppercase",
+              transition: "filter 0.15s",
+              outline: "none",
+            }}
+          >
+            <span style={{
+              fontSize: 18,
+              background: "#181818",
+              borderRadius: 4,
+              padding: "2px 8px",
+              marginRight: 8,
+              border: "2px solid #ffce3e",
+              fontWeight: 700,
+              fontFamily: "monospace",
+              letterSpacing: 1,
+            }}>⏎</span>
+            YES
+          </button>
+          <button
+            type="button"
+            onClick={handleNo}
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: 10,
+              background: "none",
+              color: "#fff",
+              border: "2px solid #fff2",
+              borderRadius: 6,
+              fontWeight: 900,
+              fontSize: 20,
+              padding: "10px 36px",
+              cursor: "pointer",
+              letterSpacing: 2,
+              textTransform: "uppercase",
+              transition: "background 0.15s, color 0.15s",
+              outline: "none",
+            }}
+          >
+            <span style={{
+              fontSize: 18,
+              background: "#181818",
+              borderRadius: 4,
+              padding: "2px 8px",
+              marginRight: 8,
+              border: "2px solid #fff2",
+              fontWeight: 700,
+              fontFamily: "monospace",
+              letterSpacing: 1,
+              color: "#fff"
+            }}>ESC</span>
+            NO
+          </button>
+        </div>
+        {error && (
+          <div
+            style={{
+              color: "#ffce3e",
+              fontWeight: 700,
+              fontSize: 15,
+              marginTop: 20,
+              textShadow: "0 0 8px #000",
+              letterSpacing: 1,
+            }}
+          >
+            {error}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
+
+const LoginCRT = () => {
+  const [phase, setPhase] = useState<"star" | "noise" | "login">("star");
+
   useEffect(() => {
     if (phase === "star") {
       const timeout = setTimeout(() => setPhase("noise"), 1100);
       return () => clearTimeout(timeout);
     }
     if (phase === "noise") {
-      const timeout = setTimeout(() => setPhase("done"), 1200);
+      const timeout = setTimeout(() => setPhase("login"), 1200);
       return () => clearTimeout(timeout);
     }
-    if (phase === "done") {
-      navigate("/login");
-    }
-  }, [phase, navigate]);
+  }, [phase]);
 
+  // Контейнер для ограничения по размеру родителя (social-network-content)
   return (
     <div
       style={{
+        position: "relative",
         width: "100%",
         height: "100%",
-        minHeight: 0,
-        minWidth: 0,
-        position: "relative",
-        background: "#111",
+        minHeight: 360,
+        minWidth: 320,
+        background: "#000",
+        borderRadius: 16,
+        overflow: "hidden",
+        boxSizing: "border-box",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        overflow: "hidden",
-        borderRadius: 0,
       }}
     >
       {phase === "star" && <StarExplosion onFinish={() => setPhase("noise")} />}
-      {phase === "noise" && <AnalogNoise />}
+      {phase === "noise" && <AnalogNoise onFinish={() => setPhase("login")} />}
+      {phase === "login" && <StyledLogin />}
     </div>
   );
 };
