@@ -17,6 +17,9 @@ const NavigationButtons = () => {
       >
         LOGOUT
       </button>
+      <button className="retro-btn" onClick={() => navigate("/loginCRT")}>
+        Тестовый вход пользователя
+      </button>
     </div>
   );
 };

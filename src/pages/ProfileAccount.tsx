@@ -41,11 +41,7 @@ const ProfileAccount = () => {
       // background: '#0f0f23',
       color: '#0f0',
       fontFamily: '"Courier New", monospace',
-      // padding: '20px',
       position: 'relative',
-      // border: '8px solid #333',
-      // boxShadow: '0 0 10px #0f0 inset',
-      // textShadow: '0 0 5px #0f0'
     }}>
       <CRTEffect />
       
@@ -68,8 +64,8 @@ const ProfileAccount = () => {
 
       <div style={{
         display: 'flex',
-        maxWidth: '800px',
-        margin: '0 auto',
+        // maxWidth: '800px',
+        // margin: '0 auto',
         position: 'relative',
         zIndex: 1
       }}>
