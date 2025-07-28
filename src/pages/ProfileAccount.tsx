@@ -114,7 +114,7 @@ const ProfileAccount = () => {
                 icon={<MessageOutlined />}
                 style={{
                   background: '#0f0',
-                  color: '#000',
+                  color: '#0f0c0a',
                   border: 'none',
                   fontFamily: '"Courier New", monospace',
                   fontWeight: 'bold'

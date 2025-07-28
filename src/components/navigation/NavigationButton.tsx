@@ -13,7 +13,7 @@ const NavigationButtons = () => {
       </button>
       <button
         className="retro-btn power-btn"
-        onClick={() => navigate("/login")}
+        onClick={() => navigate("/logout")}
       >
         LOGOUT
       </button>

@@ -3,6 +3,8 @@ import { Layout, Avatar } from "antd";
 import NavigationButtons from "./NavigationButton";
 import { rootStore } from "../../stores/RootStore";
 import { observer } from "mobx-react-lite";
+import RetroTVControls from "./RetroTVControls";
+// import GearNavigation from "./GearNavigation";
 
 const { Sider } = Layout;
 
@@ -26,7 +28,9 @@ const NavigationPanel: React.FC = () => {
       </div> */}
 
       <div className="navigation-buttons">
-        <NavigationButtons />
+        {/* <NavigationButtons /> */}
+        {/* <GearNavigation/> */}
+        <RetroTVControls/>
       </div>
     </Sider>
   );
