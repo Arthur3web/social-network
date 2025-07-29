@@ -170,70 +170,90 @@ body {
   text-decoration: underline;
 }
 
-/* .retro-btn {
-  font-family: monospace;
-  font-size: 12px;
-  border: 1px solid white;
-  background-color: #444;
-  color: white;
-  padding: 6px;
-  text-align: left;
-  cursor: pointer;
-  transition: all 0.2s;
-}
-
-.retro-btn:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-} */
-
 
 
 /* Зеленый экран сверху */
 .channel-indicator {
-  background-color: #3df240;
-  color: #000;
-  font-weight: bold;
-  text-align: center;
-  padding: 4px 0;
-  margin-bottom: 10px;
-  border-radius: 2px;
-  box-shadow: inset 0 0 5px #000;
-  /* height: 100px */
+  /* background-color: #3df240; */
+  /* color: #000; */
+  /* font-weight: bold; */
+  /* padding: 5px; */
+  /* margin-top: 30px; */
+  margin-bottom: 30px;
+  /* border-radius: 2px; */
+  /* box-shadow: inset 0 0 5px #000; */
+  /* height: 100px; */
+  /* display: flex; */
+  /* align-items: center; */
+  /* justify-content: center; */
+  /* width: 84px; */
+  /* height: 100px; */
+  height: 200px;
+  border-radius: 10px;
+  /* margin: 10px auto; */
+  background-color: #000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid #0f0;
+  box-shadow: 0 0 10px rgba(0, 255, 0, 0.3);
 }
 
 /* Вертикальные прямоугольные кнопки */
 .channel-buttons {
   display: flex;
   flex-direction: column;
-  gap: 4px;
-  margin-bottom: 12px;
+  gap: 10px;
+  /* flex: 1; */
+  margin-bottom: 100%;
+}
+
+.channel-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
 }
 
 .channel-button {
+  width: 87px;
+  height: 30px;
   background-color: #888;
   border: 2px solid #333;
-  color: #fff;
-  padding: 5px;
-  text-align: center;
   cursor: pointer;
-  transition: all 0.2s;
-}
-
-.channel-button:hover {
-  background-color: #aaa;
+  transition: all 0.2s ease-in-out;
+  box-shadow: 0 2px #666;
 }
 
 .channel-button.active {
   background-color: #fff;
-  color: #000;
-  font-weight: bold;
+  box-shadow: inset 0 2px 4px #111; /* Тень внутрь для эффекта вдавленности */
+  transform: translateY(2px); /* Смещение вниз */
+}
+
+.channel-button:active:not(:disabled) {
+  box-shadow: inset 0 2px 4px #111; /* Эффект вдавленности при нажатии */
+  transform: translateY(2px); /* Смещение вниз при нажатии */
 }
 
 .channel-button:disabled {
   opacity: 0.5;
   cursor: not-allowed;
+  box-shadow: none; /* Убираем тень для disabled кнопок */
 }
+.channel-label {
+  font-family: monospace;
+  color: #aaa;
+  font-size: 14px;
+  user-select: none;
+  transition: 0.2s ease;
+}
+
+.channel-label.active {
+  color: #fff;
+  font-weight: bold;
+  text-shadow: 0 0 2px #0f0;
+}
+
 
 /* Кнопки питания */
 .power-buttons {
@@ -241,6 +261,7 @@ body {
   gap: 6px;
   justify-content: center;
   margin-top: auto;
+  padding-bottom: 10px;
 }
 
 .power-btn {
@@ -286,3 +307,17 @@ body {
 .channel-button.login {
   background-color: #337ab7;
 }
+
+.tv-panel {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.tv-content {
+  flex: 0.8; /* Занимает всё доступное пространство */
+  display: flex;
+  flex-direction: column;
+  padding: 10px;
+}
+

@@ -91,6 +91,11 @@ const ProfileAccount = () => {
                 imageRendering: 'pixelated'
               }} 
             />
+            {/* <img 
+              src="/LOADING 3D TEXT.gif" 
+              alt="Loading..." 
+              className="loading-animation"
+            /> */}
           </div>
 
           <div style={{
@@ -114,7 +119,7 @@ const ProfileAccount = () => {
                 icon={<MessageOutlined />}
                 style={{
                   background: '#0f0',
-                  color: '#0f0c0a',
+                  color: '#000',
                   border: 'none',
                   fontFamily: '"Courier New", monospace',
                   fontWeight: 'bold'

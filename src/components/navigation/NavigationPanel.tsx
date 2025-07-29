@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Layout, Avatar } from "antd";
 import NavigationButtons from "./NavigationButton";
 import { rootStore } from "../../stores/RootStore";
@@ -9,6 +9,17 @@ import RetroTVControls from "./RetroTVControls";
 const { Sider } = Layout;
 
 const NavigationPanel: React.FC = () => {
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleNavigation = (navigateFunc: () => void) => {
+    setIsLoading(true);
+    // Имитация задержки загрузки (можно удалить в продакшене)
+    setTimeout(() => {
+      navigateFunc();
+      setIsLoading(false);
+    }, 1000);
+  };
+  
   return (
     <Sider width={180} theme="dark" className="control-panel">
       {/* <div className="user-profile">
@@ -28,9 +39,18 @@ const NavigationPanel: React.FC = () => {
       </div> */}
 
       <div className="navigation-buttons">
+        {isLoading ? (
+          <div className="loading-overlay">
+            <img 
+              src="/LOADING 3D TEXT.gif" 
+              alt="Loading..." 
+              className="loading-animation"
+            />
+          </div>
+        ) : null}
         {/* <NavigationButtons /> */}
         {/* <GearNavigation/> */}
-        <RetroTVControls/>
+        <RetroTVControls onNavigate={handleNavigation}/>
       </div>
     </Sider>
   );
