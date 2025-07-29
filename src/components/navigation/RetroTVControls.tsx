@@ -75,7 +75,7 @@ const RetroTVControls: React.FC<RetroTVControlsProps> = ({ onNavigate }) => {
         src={channels[currentChannel].gif}
         alt="Channel indicator"
         style={{
-          width: '100%', // Растягиваем на всю ширину контейнера
+          width: '50%', // Растягиваем на всю ширину контейнера
           height: 'auto', // Сохраняем пропорции
           objectFit: 'cover', // Заполняем контейнер, обрезая лишнее
           imageRendering: 'pixelated'
